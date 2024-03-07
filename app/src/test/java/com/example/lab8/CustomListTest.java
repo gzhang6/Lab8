@@ -2,6 +2,9 @@ package com.example.lab8;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 //import org.junit.Before;
@@ -9,6 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 public class CustomListTest {
     private CustomList list;
@@ -19,6 +23,10 @@ public class CustomListTest {
     public CustomList MockCityList(){
         list = new CustomList(null,new ArrayList<>());
         return list;
+    }
+
+    private City mockCity() {
+        return new City("Edmonton", "Alberta");
     }
 
     /**
@@ -33,6 +41,47 @@ public class CustomListTest {
         int listSize = list.getCount();
         list.addCity(new City("Estevan", "SK"));
         assertEquals(list.getCount(),listSize + 1);
+    }
+
+    @Test
+    void testHasCity() {
+        list = MockCityList();
+        City city = mockCity();
+
+        // add city and check has city
+        list.addCity(city);
+        assertTrue(list.hasCity(city));
+
+        // check does not have city
+        assertFalse(list.hasCity(new City("Regina", "Saskatchewan")));
+    }
+
+    @Test
+    void testDelete() {
+        list = MockCityList();
+        City city = mockCity();
+
+        // add city and check has city
+        list.addCity(city);
+
+        // Delete city
+        list.delete(city);
+
+        // After deletion
+        assertFalse(list.hasCity(city));
+
+        // Delete a non-existing city
+        assertThrows(NoSuchElementException.class, () -> {
+            list.delete(city);
+        });
+    }
+
+    @Test
+    void testCountCities() {
+        list = MockCityList();
+        list.add(new City("Calgary", "Alberta"));
+        list.add(new City("Toronto", "Ontario"));
+        assertEquals(2, list.countCities());
     }
 
 }

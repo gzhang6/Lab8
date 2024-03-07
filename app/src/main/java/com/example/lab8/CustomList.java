@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class CustomList extends ArrayAdapter<City> {
 
@@ -56,5 +58,39 @@ public class CustomList extends ArrayAdapter<City> {
      */
     public void addCity(City city){
         cities.add(city);
+    }
+
+    /**
+     * Checks if the specified city exists in the list.
+     * @param city The city to check for existence.
+     * @return true if the city exists in the list, false otherwise.
+     */
+    public boolean hasCity(City city) {
+        for (int i = 0; i < cities.size(); i++) {
+            if (Objects.equals(city.getCityName(), cities.get(i).getCityName()) && Objects.equals(city.getProvinceName(), cities.get(i).getProvinceName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Deletes the specified city from the list.
+     * @param city The city to be deleted.
+     */
+    public void delete(City city) throws NoSuchElementException {
+        if (cities.contains(city)) {
+            cities.remove(city);
+        } else {
+            throw new NoSuchElementException("City does not exist");
+        }
+    }
+
+    /**
+     * Returns the number of cities in the list.
+     * @return The number of cities in the list.
+     */
+    public int countCities() {
+        return cities.size();
     }
 }
